@@ -1,4 +1,5 @@
-﻿using ETicaretAPI.Persistence.Contexts;
+﻿using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,10 +15,18 @@ namespace ETicaretAPI.Persistence
     {
         public static void AddPersistenceServices(this IServiceCollection services)
         {
-          
+           services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configrations.ConnectionString) ,
+               ServiceLifetime.Singleton);
 
 
-            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configrations.ConnectionString));
+            services.AddSingleton<ICustomerReadRepository, CustomerReadRepository>();
+            services.AddSingleton<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddSingleton<IProductReadRepository, ProductReadRepository>();
+            services.AddSingleton<IProductWriteRepository, ProductWriteRepository>();
+            services.AddSingleton<IOrderReadRepository, OrderReadRepository>();
+            services.AddSingleton<IOrderWriteRepository, OrderWriteRepository>();
+
+
         }
 
     }
